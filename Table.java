@@ -8,11 +8,10 @@ import java.awt.event.*;
 
 public class Table implements ActionListener{
 
-private JButton[] buttons = new JButton[12];
-private JButton blankButton;
+private Tile[] tiles = new Tile[12];
+private Tile blankTile;
 
 public Table()
-
 {
 
 	JFrame frame = new JFrame("Puzzle");
@@ -23,12 +22,16 @@ public Table()
 	GridLayout layout1 = new GridLayout(3,4);
 	p1.setLayout(layout1);
 
-	for(int i =0 ; i<12 ;i++){
-		buttons[i] = new JButton(new ImageIcon("bart"+i+".jpg"));
-		p1.add(buttons[i]);
-		buttons[i].addActionListener(this);
+	int i = 0;
+	for(int row =0 ; row < 3; row++){
+	  for(int col=0; col < 4; col++){
+		tiles[i] = new Tile(col,row,new ImageIcon("bart"+i+".jpg"));
+		p1.add(tiles[i]);
+		tiles[i].addActionListener(this);
+	  i++;
+	 }
 	}
-        blankButton = buttons[0];
+        blankTile = tiles[0];
 
 	frame.setSize(111*4,121*3);
 	frame.setVisible(true);
@@ -37,13 +40,23 @@ public Table()
 
 	public void actionPerformed(ActionEvent e)
 	{
-		for(int i = 0 ; i < 12 ; i++){
-			if(e.getSource() == buttons[i]){
-				Icon tempIcon = buttons[i].getIcon();
-				buttons[i].setIcon(blankButton.getIcon());
-				blankButton.setIcon(tempIcon);
-				blankButton = buttons[i];
-			}
+		Tile tile = (Tile)e.getSource();
+        if((tile.getRow()==blankTile.getRow() && (tile.getCol()==blankTile.getCol()-1 || tile.getCol()==blankTile.getCol()+1)) 
+			|| (tile.getCol()==blankTile.getCol() && (tile.getRow()==blankTile.getRow()-1 || tile.getRow()==blankTile.getRow()+1))){
+		Icon tempIcon =tile.getIcon();
+		tile.setIcon(blankTile.getIcon());
+		blankTile.setIcon(tempIcon);
+		blankTile = tile;
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
