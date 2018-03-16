@@ -10,11 +10,13 @@ public class Table implements ActionListener{
 
 private Tile[] tiles = new Tile[12];
 private Tile blankTile;
-
+private Score scoreManager = new Score();
+private JFrame frame;
+private boolean isRandomising = false;
 public Table()
 {
 
-	JFrame frame = new JFrame("Puzzle");
+	frame = new JFrame("Puzzle - number of clicks: 0");//PWT removed type as variable defined above now + changed the title
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	JPanel p1 = new JPanel();
@@ -25,7 +27,7 @@ public Table()
 	int i = 0;
 	for(int row =0 ; row < 3; row++){
 	  for(int col=0; col < 4; col++){
-		tiles[i] = new Tile(col,row,new ImageIcon("bart"+i+".jpg"));
+		tiles[i] = new Tile(col,row,i,new ImageIcon("bart"+i+".jpg"));//PWT added the index of tile too for looking up the order
 		p1.add(tiles[i]);
 		tiles[i].addActionListener(this);
 	  i++;
@@ -35,8 +37,18 @@ public Table()
 
 	frame.setSize(111*4,121*3);
 	frame.setVisible(true);
+	
+	randomize();
 }
 
+ private void checkGameSolved(){
+	 for(int i = 0; i<tiles.length;i++){
+		 if(tiles[i].getTileIndex()!=i)
+			 return;
+	 }
+	 //the game is finished: we can display the scores
+	 scoreManager.displayScoreBoard();
+ }
 
 	public void actionPerformed(ActionEvent e)
 	{
@@ -46,17 +58,35 @@ public Table()
 		Icon tempIcon =tile.getIcon();
 		tile.setIcon(blankTile.getIcon());
 		blankTile.setIcon(tempIcon);
+		
+		int tempIndex = blankTile.getTileIndex();
+		blankTile.setTileIndex(tile.getTileIndex());
+		tile.setTileIndex(tempIndex);
+		
 		blankTile = tile;
+		
+		if(!isRandomising){
+			scoreManager.incrementScore();//increment the score
+			frame.setTitle("Puzzle - number of clicks: "+scoreManager.getScore());//PWT removed te comment and updated the frame with a title that contains score
+			checkGameSolved();
+			}
 		}
 	}
+	
+	private void randomize(){
+		//get a random number of iteration trials between 50 and 200
+		isRandomising = true;
+		int maxIteration = (int)(Math.random() * ((200 - 50) + 1)) + 50;
+	   System.out.println("iterations "+ maxIteration);
+		for(int iteration =0; iteration<maxIteration;iteration++ ){
+			//click on a random tile of the game
+			int indexOfTile = (int) Math.floor(Math.random() * 12);
+			System.out.println("click "+ indexOfTile);
+			tiles[indexOfTile].doClick();
+		}
+		isRandomising = false;
+	}
 }
-
-
-
-
-
-
-
 
 
 

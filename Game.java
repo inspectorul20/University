@@ -4,7 +4,7 @@ public class Game{
 
 public static void main(String[] args) {
 
-Table aTable = new Table();
+Table aTable = new Table(); //creates the main table
 }
 
 }
