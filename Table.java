@@ -6,6 +6,10 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.event.*;
 
+/**
+A class for creating the Puzzle game. The class responsable for the game's dynamic.
+*/
+
 public class Table implements ActionListener{
 
 private Tile[] tiles = new Tile[12];
@@ -13,10 +17,15 @@ private Tile blankTile;
 private Score scoreManager = new Score();
 private JFrame frame;
 private boolean isRandomising = false;
+
+/**
+Constructor that defines what the Table class should look like
+*/
+
 public Table()
 {
 
-	frame = new JFrame("Puzzle - number of clicks: 0");//PWT removed type as variable defined above now + changed the title
+	frame = new JFrame("Puzzle - number of clicks: 0");
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	JPanel p1 = new JPanel();
@@ -27,7 +36,7 @@ public Table()
 	int i = 0;
 	for(int row =0 ; row < 3; row++){
 	  for(int col=0; col < 4; col++){
-		tiles[i] = new Tile(col,row,i,new ImageIcon("bart"+i+".jpg"));//PWT added the index of tile too for looking up the order
+		tiles[i] = new Tile(col,row,i,new ImageIcon("bart"+i+".jpg")); //Created the tile so we can add them to the array. We assign an action listener to each Tile.
 		p1.add(tiles[i]);
 		tiles[i].addActionListener(this);
 	  i++;
@@ -41,14 +50,27 @@ public Table()
 	randomize();
 }
 
+/**
+Method which checks if the game is finished
+*/
+
+
  private void checkGameSolved(){
 	 for(int i = 0; i<tiles.length;i++){
 		 if(tiles[i].getTileIndex()!=i)
-			 return;
+			 return; //if the game is not finished we don't show score
 	 }
 	 //the game is finished: we can display the scores
 	 scoreManager.displayScoreBoard();
  }
+
+
+/**
+Method that deals with the click event.
+@param ActionEvent e A variable of type ActionEvent.
+*/
+
+
 
 	public void actionPerformed(ActionEvent e)
 	{
@@ -67,11 +89,16 @@ public Table()
 		
 		if(!isRandomising){
 			scoreManager.incrementScore();//increment the score
-			frame.setTitle("Puzzle - number of clicks: "+scoreManager.getScore());//PWT removed te comment and updated the frame with a title that contains score
+			frame.setTitle("Puzzle - number of clicks: "+scoreManager.getScore());
 			checkGameSolved();
 			}
 		}
 	}
+
+/**
+Method which will randomize the puzzle
+*/
+
 	
 	private void randomize(){
 		//get a random number of iteration trials between 50 and 200

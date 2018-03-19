@@ -8,12 +8,11 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
-public class Score implements ActionListener{
-
 /**
-The Score class implements action listener (which is an interface not a class)
-
+The score class deals with the scoreboard of the game
 */
+
+public class Score implements ActionListener{
 
 
 private JTextField fieldforscore;
@@ -23,29 +22,39 @@ private int highScoreLength = 10; //created two arrays that contain the names of
 private Vector<String> names = new Vector<>();// dynamic array for storing the names
 private Vector<Integer> scores = new Vector<Integer>();//dynamic array for storing the scores
 
+/**
+This is the main constructor which describes what the Score looks like, what is should do and its limits
+*/
  
  public Score(){
   getScoresTxt();
  }
 
 /**
-This is the main constructor which describes what the Score looks like, what is should do and its limits
-*/
+Get scores 
+@return currentScore A variable of type integer. Represents the current score.
+*/  
 
  public int getScore(){
    return currentScore;
  } 
 
- public void incrementScore(){
+/**
+Adds 1 to score
+*/  
+ 
+  public void incrementScore(){
    currentScore++;
  }
-
+/**
+Method which places the score on the scoreboard after you've finished the game.
+*/  
   public void actionPerformed(ActionEvent e) //the event that happens is when we hit enter in the textfield
   { 
 	int indexInScores = -1; // indicator of the index in the vectors where we need to put the current score. By default set to -1 to check if we actually find a position.
         for(int i = 0 ; i< scores.size();i++){
                 //we check all the values in the vector to find where we can insert the current score.
-		if(scores.elementAt(i)>currentScore){ //la méthode elementAt() permet de retourner la valeur à l'index i
+		if(scores.elementAt(i)>currentScore){ //method elementAT() allows us to return the value at the index i
 		   indexInScores = i;
                    break;
 		}
@@ -63,7 +72,10 @@ This is the main constructor which describes what the Score looks like, what is 
 		fieldforscore.removeActionListener(this);		
 	    putScoresTxt(); // updates the txt file
   }
-  
+
+/**
+Method which updates the score in the interface.
+*/ 
   private void updateScores(){
 	 //remove everything
 		panelScores.removeAll();
@@ -75,7 +87,9 @@ This is the main constructor which describes what the Score looks like, what is 
 	//repaint
 	panelScores.revalidate();
  }
- 
+/**
+Method which saves the scores in a txt file.
+*/  
  private void putScoresTxt(){
 	try{
 		PrintWriter writer = new PrintWriter("Scores.txt", "UTF-8");
@@ -90,20 +104,24 @@ This is the main constructor which describes what the Score looks like, what is 
 	}
  }
 
+/**
+Method which wil read the scores from the txt file and check if the name
+*/ 
+
  private void getScoresTxt(){
 		try{
 			BufferedReader in = new BufferedReader(new FileReader("Scores.txt"));
-			boolean isReadingName = true;
+			boolean isReadingName = true; //this is true because we need the first line to be a name
 			String line;
-			while((line = in.readLine()) != null)
+			while((line = in.readLine()) != null) //goes through each line and checks if there is a name or a score
 			{
-			   if (isReadingName){
+			   if (isReadingName){  //the first line of the code is a name
 				   names.add(line);
 			   }
 			   else {
 				   scores.add(Integer.parseInt(line));
 			   }
-			   isReadingName = !isReadingName;
+			   isReadingName = !isReadingName;//if a line is not a name, it is faulse and we will have a score
 			}
 			in.close();
 		}
@@ -112,7 +130,9 @@ This is the main constructor which describes what the Score looks like, what is 
 		}
 }
 
-  
+/**
+Method which describes the content of the scoreboard
+*/  
   public void displayScoreBoard(){
 	JFrame scoreboard = new JFrame("HIGH SCORES"); //created the frame of the Score menu
 	
@@ -121,7 +141,7 @@ This is the main constructor which describes what the Score looks like, what is 
         panelforscore.setLayout(layoutforpanelforscore);
        
         panelScores = new JPanel(); //create the panel with names and scores in the panel "pnaelforscore"
-        panelforscore.add("North",panelScores);//added panel 1 to the main panel called panelforscore PWT added "north"
+        panelforscore.add("North",panelScores);//added panel 1 to the main panel called panelforscore
         GridLayout layoutforpanel1 = new GridLayout(0,2);
         panelScores.setLayout(layoutforpanel1);
 		updateScores();
